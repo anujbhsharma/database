@@ -1,0 +1,25 @@
+# Install Docker Desktop first if you haven't already
+# Create a docker-compose.yml file with this content:
+
+
+services:
+  weaviate:
+    image: semitechnologies/weaviate:1.24.1
+    ports:
+      - "8080:8080"
+    environment:
+      QUERY_DEFAULTS_LIMIT: 25
+      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: 'true'
+      DEFAULT_VECTORIZER_MODULE: 'text2vec-transformers'
+      ENABLE_MODULES: 'text2vec-transformers'
+      TRANSFORMERS_INFERENCE_API: http://t2v-transformer:8080
+    volumes:
+      - weaviate_data:/var/lib/weaviate
+
+  t2v-transformer:
+    image: semitechnologies/transformers-inference:sentence-transformers-multi-qa-MiniLM-L6-cos-v1
+    environment:
+      ENABLE_CUDA: '0'
+
+volumes:
+  weaviate_data:
